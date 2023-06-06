@@ -1,0 +1,48 @@
+/target/
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+.DS_Store
+
+*/target/*
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+
+### NetBeans ###
+/nbproject/private/
+/build/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+
+### Secrets ###
+secret.env
+.env
+
+### Logging ###
+logs
+### Secrets ###
+secret.env
+.env
+.env.*
+!.env.*.example
+# jars
+*.jar
+.mvn/*.jar
+cognito-auth/src/main/resources/
+index.html
