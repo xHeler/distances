@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/css/ol.css" type="text/css">
+    <style>
+        html, body, #map {
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+
+        .map-marker-label {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 4px;
+            padding: 2px 4px;
+            white-space: nowrap;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<script>
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            })
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([0, 0]),
+            zoom: 2
+        })
+    });
+
+    fetch('http://localhost:8080/api/v1/cities')
+        .then(response => response.json())
+        .then(data => {
+            data.forEach(city => {
+                var marker = new ol.Feature({
+                    geometry: new ol.geom.Point(ol.proj.fromLonLat([city.lng, city.lat]))
+                });
+
+                var markerStyle = new ol.style.Style({
+                    image: new ol.style.Icon({
+                        anchor: [0.5, 1],
+                        anchorXUnits: 'fraction',
+                        anchorYUnits: 'fraction',
+                        src: 'https://upload.wikimedia.org/wikipedia/commons/e/ec/RedDot.svg'
+                    })
+                });
+
+                marker.setStyle(markerStyle);
+
+                var vectorSource = new ol.source.Vector({
+                    features: [marker]
+                });
+
+                var markerVectorLayer = new ol.layer.Vector({
+                    source: vectorSource,
+                });
+
+                map.addLayer(markerVectorLayer);
+
+                // Add city name label
+                var element = document.createElement('div');
+                element.innerHTML = city.name;
+                element.className = 'map-marker-label';
+
+                var position = ol.proj.fromLonLat([city.lng, city.lat]);
+
+                var overlay = new ol.Overlay({
+                    element: element,
+                    position: position,
+                    positioning: 'bottom-center',
+                    offset: [0, -30]  // offset label position
+                });
+
+                map.addOverlay(overlay);
+            });
+        });
+</script>
+</body>
+</html>

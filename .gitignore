@@ -45,4 +45,3 @@ secret.env
 *.jar
 .mvn/*.jar
 cognito-auth/src/main/resources/
-index.html
