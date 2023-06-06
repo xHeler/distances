@@ -15,11 +15,26 @@
             padding: 2px 4px;
             white-space: nowrap;
         }
+
+        .controls {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
     <script src="https://cdn.jsdelivr.net/gh/openlayers/openlayers.github.io@master/en/v6.9.0/build/ol.js"></script>
 </head>
 <body>
 <div id="map"></div>
+<div class="controls">
+    <input type="text" id="city1" placeholder="City 1">
+    <input type="text" id="city2" placeholder="City 2">
+    <button onclick="getDistance()">Get Distance</button>
+    <p id="distance"></p>
+</div>
 <script>
     var map = new ol.Map({
         target: 'map',
@@ -80,6 +95,17 @@
                 map.addOverlay(overlay);
             });
         });
+
+    function getDistance() {
+        var city1 = document.getElementById('city1').value;
+        var city2 = document.getElementById('city2').value;
+
+        fetch('http://localhost:8080/api/v1/cities/distance/' + city1 + '/' + city2)
+            .then(response => response.json())
+            .then(distance => {
+                document.getElementById('distance').innerText = 'Distance: ' + distance + ' km';
+            });
+    }
 </script>
 </body>
 </html>
